@@ -1,0 +1,28 @@
+﻿@model Realtor.Models.City
+
+@{
+    ViewData["Title"] = "Изтриване";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Изтриване на град</h1>
+
+<h3>Сигурни ли сте, че искате да изтриете този град?</h3>
+<div>
+    <h4>Град</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.name)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.name)
+        </dd>
+    </dl>
+    
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="id" />
+        <input type="submit" value="Изтрий" class="btn btn-danger" /> |
+        <a asp-action="Index">Back to List</a>
+    </form>
+</div>

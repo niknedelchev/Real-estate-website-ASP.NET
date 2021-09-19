@@ -1,0 +1,103 @@
+﻿@model IEnumerable<Realtor.Models.Image>
+
+@{
+    ViewData["Title"] = "Създай обява";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    int propID = 0;
+    int imgCount = 0;
+
+    if (TempData["PropertyID"] != null)
+    {
+        propID = (int)TempData["PropertyID"];
+        imgCount = (int)TempData["imgCount"];
+    }
+  
+
+}
+
+<h1>Добавяне на снимки</h1>
+
+@{ if (propID != 0)
+    {
+        <h4>Добави снимки за имот @propID. Максимален брой снимки 5.</h4>
+        <h4> Брой заредени снимки @imgCount </h4>
+
+    }
+  
+}
+<hr />
+@{
+    if (imgCount < 5)
+    {
+        imgCount++;
+        TempData["imgCount"] = imgCount;
+        TempData["PropertyID"] = propID;
+
+    <form method="post" enctype="multipart/form-data" asp-controller="Images" asp-action="Create">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <input type="file" value="Избери" name="ifile" />
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <input type="submit" value="Зареди" class="btn btn-primary" />
+                </div>
+                <h4>@ViewData["Message"]</h4>
+            </div>
+        </div>
+        <div class="form-group">
+            <input style="position:absolute; left:-200px;" type="text" name="propID" value=@propID />
+        </div>
+    </form>
+
+    }
+    else
+    {
+        <div>Достигнат е максималният брой снимки.</div>
+    }
+}
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.path)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+
+        @{
+            foreach (var item in Model.Where(x => x.propertyId == propID))
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.name)
+                    </td>
+                    <td>
+                        <img src="~/images/@item.name" height="200" width="200" />
+                    </td>
+                    <td>
+                        <a asp-action="Details" asp-route-id="@item.id">Преглед</a> |
+                        <a asp-action="Delete" asp-route-id="@item.id">Изтриване</a>
+                    </td>
+                </tr>
+            }
+        }
+
+        <div>
+            <a asp-controller="Properties" asp-action="Index">Завърши и обратно към обявите</a>
+        </div>
+
+        @section Scripts {
+            @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+        }

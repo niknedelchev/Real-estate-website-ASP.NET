@@ -1,0 +1,88 @@
+﻿@model Realtor.Models.Property
+
+@{
+    ViewData["Title"] = "Създаване на обява";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@{
+    IList<SelectListItem> propTypes = Enum.GetValues(typeof(PropertyType)).Cast<PropertyType>().Select(x => new SelectListItem { Text = x.ToString(), Value = ((int)x).ToString() }).ToList();
+    SelectList propTypesList = new SelectList(propTypes, "Value", "Text");
+
+    IList<SelectListItem> transct = Enum.GetValues(typeof(Transaction)).Cast<Transaction>().Select(x => new SelectListItem { Text = x.ToString(), Value = ((int)x).ToString() }).ToList();
+    SelectList transctList = new SelectList(transct, "Value", "Text");
+
+    var citiesNew = ViewData["CitiesList"];
+}
+
+
+<h1>Създаване на обява</h1>
+
+<h4>Имот</h4>
+<hr />
+
+<form asp-action="Create">
+    <div class="row">
+        <div class="col-md-4">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="cityID" class="control-label"></label>
+                @Html.DropDownListFor(
+                    x => x.cityID,
+                    new SelectList(ViewData["CitiesList"] as IEnumerable<City>,
+                    "id", "name"),
+                    "-- Select --",
+                    new { @class = "form-control" }
+               )
+            </div>
+            <div class="form-group">
+                <label asp-for="propertyType" class="control-label"></label>
+                @Html.DropDownListFor(x => x.propertyType, propTypesList, "-- Select --", new { @class = "form-control" })
+                <span asp-validation-for="propertyType" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="transaction" class="control-label"></label>
+                @Html.DropDownListFor(x => x.transaction, transctList, "-- Select --", new { @class = "form-control" })
+                <span asp-validation-for="transaction" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group">
+                <label asp-for="header" class="control-label"></label>
+                <input asp-for="header" class="form-control" />
+                <span asp-validation-for="header" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="description" class="control-label"></label>
+                <input asp-for="description" class="form-control" />
+                <span asp-validation-for="description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="phoneNumber" class="control-label"></label>
+                <input asp-for="phoneNumber" class="form-control" />
+                <span asp-validation-for="phoneNumber" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="price" class="control-label"></label>
+                <input asp-for="price" class="form-control" />
+                <span asp-validation-for="price" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input asp-for="userID" class="form-control" value="@ViewData["User"]" hidden />
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="form-group col">
+            <input type="submit" value="Добави снимки" class="btn btn-primary" />
+        </div>
+    </div>
+</form>
+
+<div>
+    <a asp-action="Index">Обратно към обявите</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

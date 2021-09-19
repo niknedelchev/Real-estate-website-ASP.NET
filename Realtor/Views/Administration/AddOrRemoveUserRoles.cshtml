@@ -1,0 +1,31 @@
+﻿@model List<UserRolesModel>
+
+@{ 
+    var roleId = ViewBag.roleId;
+} 
+
+<form method="post">
+    <div class="card">
+        <div class="card-header">
+            <h2>Добави или изтрий потребители спрямо тази роля</h2>
+        </div>
+        <div class="card-body">
+            @for (int i=0; i< Model.Count; i++)
+            {
+            <div class="form-check m1">
+                <input type="hidden"  asp-for="@Model[i].userId"  />
+                <input type="hidden" asp-for="@Model[i].userName" />
+                <input asp-for="@Model[i].isSelected" class="form-check-input" />
+                <label asp-for="@Model[i].isSelected" class="form-check-label">
+                    @Model[i].userName
+                </label>
+            </div>
+            }
+
+        </div>
+        <div class="card-footer">
+            <input type="submit" value="Актуализирай" class="btn btn-primary" />
+            <a asp-action="EditRole" asp-route-id="@roleId" class="btn btn-primary">Откажи</a>
+        </div>
+    </div>
+</form>

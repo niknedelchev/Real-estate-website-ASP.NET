@@ -1,0 +1,44 @@
+﻿@using Microsoft.AspNetCore.Identity;
+@model IEnumerable<IdentityRole>
+
+@{
+    ViewBag.Title = "Всички роли";
+}
+
+<h1> Всички роли</h1>
+
+@if (Model.Any())
+{
+    <a class="btn btn-primary mb-3" style="width:auto" asp-action="CreateRole" asp-controller="Administration">Добави нова роля</a>
+
+    foreach (var role in Model)
+    {
+        <div class="card mb-3">
+
+            <div class="card-body">
+                <h5 class="card-title">
+                    @role.Name
+                </h5>
+            </div>
+            <div class="card-footer">
+                <a class="btn btn-primary" asp-action="EditRole" asp-controller="Administration" asp-route-id="@role.Id">Промяна</a>
+            </div>
+        </div>
+    }
+
+}
+else
+{
+    <div class="card">
+        <div class="card-header">
+            Към момента няма създадени роли
+        </div>
+        <div class="card-body">
+            <h5 class="card-title">
+                Създай роля чрез бутона по-долу
+            </h5>
+            <a class="btn btn-primary"
+               asp-controller="Administration" asp-action="CreateRole">Създай роля</a>
+        </div>
+    </div>
+}

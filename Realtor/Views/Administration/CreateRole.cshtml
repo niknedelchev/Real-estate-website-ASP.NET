@@ -1,0 +1,26 @@
+﻿@model CreateRoleModel
+
+
+<h1>Създай нова роля</h1>
+
+<div class="row">
+    <div class="col-md-4">
+        <form method="post">
+            <hr />
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="RoleName"></label>
+                <input asp-for="RoleName" class="form-control" />
+                <span asp-validation-for="RoleName" class="text-danger"></span>
+            </div>
+            <button style="width:auto" type="submit" class="btn btn-primary">Добави роля</button>
+        </form>
+    </div>
+    <div class="col-md-6 col-md-offset-2">
+
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

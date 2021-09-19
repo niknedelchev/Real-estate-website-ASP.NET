@@ -1,0 +1,121 @@
+﻿@model IEnumerable<Realtor.Models.Property>
+
+@{
+    ViewData["Title"] = "Обяви";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@{
+    IList<SelectListItem> propTypes = Enum.GetValues(typeof(PropertyType)).Cast<PropertyType>().Select(x => new SelectListItem { Text = x.ToString(), Value = ((int)x).ToString() }).ToList();
+    SelectList propTypesList = new SelectList(propTypes, "Value", "Text");
+
+    IList<SelectListItem> transct = Enum.GetValues(typeof(Transaction)).Cast<Transaction>().Select(x => new SelectListItem { Text = x.ToString(), Value = ((int)x).ToString() }).ToList();
+    SelectList transctList = new SelectList(transct, "Value", "Text");
+
+    var citiesNew = ViewData["CitiesList"];
+}
+
+<h1>Обяви</h1>
+
+<p>
+    <a asp-action="Create">Създай нова обява</a>
+</p>
+
+<hr />
+<form asp-action="Index">
+    <div class="row">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="col-md-4">
+            <div class="form-group">
+                <label for="cityID" class="control-label">Град</label>
+                @Html.DropDownList(
+                  "cityID",
+                  new SelectList(ViewData["CitiesList"] as IEnumerable<City>,
+                  "id", "name"),
+                  "-- Избери --",
+                  new { @class = "form-control" }
+             )
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group">
+                <label for="propType" class="control-label">Тип имот</label>
+                @Html.DropDownList("propType", propTypesList, "-- Избери --", new { @class = "form-control" })
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group">
+                <label for="transctType" class="control-label">Тип обява</label>
+                @Html.DropDownList("transctType", transctList, "-- Избери --", new { @class = "form-control" })
+            </div>
+        </div>
+        </div>
+    <div class="row">
+        <div class="form-group col">
+            <input type="submit" value="Избери" class="btn btn-primary" />
+        </div>
+    </div>
+    
+</form>
+
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.image)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.header)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.price)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.userID)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null)
+        {
+            foreach (var item in Model)
+            {
+        <tr>
+            <td>
+                @{
+                    if (item.image.Any())
+                    {
+                        <img src="~/images/@item.image.First().name" height="100" width="100" />
+                    }
+                    else
+                    {
+                        <div>No images</div>
+                    }
+                }
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.header)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.price)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.userID)
+            </td>
+
+            <td>
+                <a asp-action="Details" asp-route-id="@item.propertyId">Преглед</a>
+                @if (User.Identity.IsAuthenticated && (User.Identity.Name == item.userID || User.IsInRole("Admin")))
+                {
+                    <a asp-action="Delete" asp-route-id="@item.propertyId">| Изтриване</a>
+                }
+            </td>
+        </tr>
+            }
+        }
+
+    </tbody>
+</table>
